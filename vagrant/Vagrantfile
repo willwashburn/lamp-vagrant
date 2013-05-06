@@ -61,9 +61,16 @@ Vagrant::Config.run do |config|
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
   # config.vm.share_folder("web-app", "/home/vagrant/web-app", "../", :owner => "vagrant")
+  
+  config.vm.share_folder("../database","/home/vagrant/database","../database",:owner =>"vagrant")
+
   web_apps.each do |id, web_app|
     config.vm.share_folder(id, web_app["guest_project_folder"], web_app["host_project_folder"], :owner => "vagrant")
   end
+
+  #root root mysql password (for now)
+  #
+
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
@@ -80,7 +87,14 @@ Vagrant::Config.run do |config|
       },
       :mysql => {
           :server_root_password => "abcd1234"
+      },
+      :pinleague => {
+          :database => {
+              :password => 'pinleague_1234'
+          }
       }
     }
   end
+
+  config.vm.provision :shell, :path => "../database/create_database.sh"
 end
