@@ -1,1 +1,5 @@
-sup
+<?php
+
+echo phpinfo();
+
+?>
